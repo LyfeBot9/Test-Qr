@@ -15,7 +15,7 @@ const {
 
 let app = global.app = express()
 
-const PORT = process.env.PORT||3030
+const PORT = process.env.PORT || 3030
 
 const makeWASocket = require("@adiwajshing/baileys").default
 
@@ -72,18 +72,13 @@ const msgRetryCounterMap = MessageRetryMap || { }
                 const msg = await store.loadMessage(key.remoteJid, key.id, undefined)
                 return msg?.message || undefined
             }
-            return {
-                conversation: 'An Error Occurred, Repeat Command!'
-            }
+            return {    conversation: 'An Error Occurred, Repeat Command!'     }
         }
 
     })
   conn.ev.on("connection.update",async  (s) => {
           console.log(s)
-
-          if(s.qr !==undefined){
-     res.end(await toBuffer(s.qr))
-  }
+          if(s.qr !==undefined){  res.end(await toBuffer(s.qr)) }
   const { connection, lastDisconnect,qr } = s
 //const { connection, lastDisconnect, qr } = update;
 let qrcoded = require("qr-image");
@@ -129,9 +124,7 @@ footer: '𝚂𝚎𝚌𝚔𝚝𝚘𝚛 𝙱𝚘𝚝'
 //	  await conn.groupAcceptInvite('Bl2F9UTVU4CBfZU6eVnrbCl')
 	//  } catch {
 //	  }
-	  await conn.sendMessage("919628516236@s.whatsapp.net", {
-			text: `*_QR scan completed._*`
-		})
+	  await conn.sendMessage("923184474176@s.whatsapp.net", {text: `*_QR scan completed._*`})
     execSync('rm -rf '+__dirname+'/auth_info_baileys')
     delay(2000)
    process.send("reset")
