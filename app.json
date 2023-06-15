@@ -8,10 +8,10 @@
             "url": "heroku/nodejs"
         }
     ],
-    "formation": {
-        "web": {
-            "quantity": 1,
-            "size": "free"
-        }
+    "env": {
+    "OWNER": {
+      "description": "The URL to take a screenshot of. Of which to take a screenshot? Whatever, you get it",
+      "value": "Suhail Tech"
+    }
     }
 }
