@@ -1,6 +1,11 @@
 let express = require('express') 
 const P = require('pino')
 let path = require('path')
+
+const { createCanvas, registerFont } = require('canvas');
+
+
+
 const axios = require("axios");
 let qrcode = require('qrcode')
 let qrcoded = require("qr-image");
@@ -164,27 +169,62 @@ app.get("/", (req, res) => {
    }
  });
 
-app.get("/deployment", (req, res) => {
- res.sendFile(__dirname+"/public/index-button.html");
+app.get("/deployment", (req, res) => { res.sendFile(__dirname+"/public/index-button.html");});
+
+
+//----------------------------------------------------------------------
+
+app.get('/webss/:url', async (req, res) => {
+  const url = req.params.url;
+
+  const canvasWidth = 600;
+  const canvasHeight = 800;
+
+  const { launch } = require('puppeteer');
+  const browser = await launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  const page = await browser.newPage();
+  await page.setViewport({ width: canvasWidth, height: canvasHeight });
+  await page.goto(url);
+  await page.waitForTimeout(2000); // Wait for some time to allow dynamic content to load
+
+  const screenshotPath = '/tmp/screenshot.png';
+  await page.screenshot({ path: screenshotPath });
+
+  await browser.close();
+
+  await convertImage(screenshotPath);
+
+  const modifiedImageBuffer = fs.readFileSync(screenshotPath);
+
+  res.writeHead(200, {
+    'Content-Type': 'image/png',
+    'Content-Length': modifiedImageBuffer.length,
+  });
+  res.end(modifiedImageBuffer);
 });
-app.get("/deploy", (req, res) => {
-  res.sendFile(__dirname+"/public/deploy.html");
-});
-app.get("/heroku", (req, res) => {
-  res.sendFile(__dirname+"/public/heroku.html");
-});
-app.get("/editor", (req, res) => {
-  res.sendFile(__dirname+"/public/editor.html"); 
-});
-app.get("/modules", (req, res) => {
-  res.sendFile(__dirname+"/public/module.html");
-});
+
+function convertImage(filename) {
+  return new Promise((resolve, reject) => {
+    const { exec } = require('child_process');
+    const convertCommand = `convert ${filename} -gravity center -extent ${canvasWidth}x${canvasHeight} -colorspace gray -depth 8 ${filename}`;
+
+    exec(convertCommand, (error, stdout, stderr) => {
+      if (error) {   console.error({ error, stdout, stderr });
+        reject();
+      } else {  resolve();   }
+    });
+  });
+}
+
+//----------------------------------------------------------------------
+app.get("/deploy", (req, res) => {  res.sendFile(__dirname+"/public/deploy.html");});
+app.get("/heroku", (req, res) => {  res.sendFile(__dirname+"/public/heroku.html");});
+app.get("/editor", (req, res) => {  res.sendFile(__dirname+"/public/editor.html"); });
+app.get("/modules", (req, res) => {  res.sendFile(__dirname+"/public/module.html");});
 // app.get('/koyeb', (req, res) => {
 // res.redirect(301, 'https://app.koyeb.com/apps/deploy?type=docker&image=quay.io/sampandey001/koyeb:latest&env[SESSION_ID]&env[OWNER_NUMBER]&env[MONGODB_URI]&&env[OWNER_NAME]&env[PREFIX]=.&env[THUMB_IMAGE]=https://raw.githubusercontent.com/SecktorBot/Brandimages/main/logos/SocialLogo%201.png&env[email]=sam@secktor.live&env[global_url]=instagram.com&env[FAKE_COUNTRY_CODE]=92&env[READ_MESSAGE]=false&env[DISABLE_PM]=false&env[ANTI_BAD_WORD]=fuck&env[WORKTYPE]=public&env[THEME]=SECKTOR&env[PACK_INFO]=Sam;Pandey&name=secktorbot&env[KOYEB_NAME]=sampandey001&env[ANTILINK_VALUES]=chat.whatsapp.com&env[PORT]=8000');
 // });
-app.get("/koyeb", (req, res) => {
-  res.sendFile(__dirname+"/public/deploy.html");
-});
+app.get("/koyeb", (req, res) => {  res.sendFile(__dirname+"/public/deploy.html");});
 app.get('/koyeb2', (req, res) => {
 res.redirect(301, 'https://app.koyeb.com/apps/deploy?type=git&repository=github.com/https://github.com/SamPandey001/Secktor-Md&branch=main&build_command=npm%20i&run_command=npm%20start&env[SESSION_ID]&env[OWNER_NUMBER]&env[MONGODB_URI]&&env[OWNER_NAME]&env[PREFIX]=.&env[THUMB_IMAGE]=https://raw.githubusercontent.com/SecktorBot/Brandimages/main/logos/SocialLogo%201.png&env[email]=sam@secktor.live&env[global_url]=instagram.com&env[FAKE_COUNTRY_CODE]=92&env[READ_MESSAGE]=false&env[DISABLE_PM]=false&env[ANTI_BAD_WORD]=fuck&env[WORKTYPE]=public&env[THEME]=SECKTOR&env[PACK_INFO]=Sam;Pandey&name=secktorbot&env[KOYEB_NAME]=sampandey001&env[ANTILINK_VALUES]=chat.whatsapp.com&env[PORT]=8000');
 	     });
