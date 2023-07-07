@@ -43,7 +43,7 @@ app.get("/announcement", (req, res) => {
 let data = `{
  "announcement": true,
  "status": 200,
- "developers": "SamPandey001",
+ "developers": "SuhailTechInfo",
  "version": 0.0.6,
  "maintained": true,
  "count":"1",
@@ -117,7 +117,7 @@ app.get("/", (req, res) => {
 	
           let cc = `Thanks for choosing Suhail Tech Secktor-Md.\n\n_You completed first step of making Secktor-bot_.\nVisit For Help \n*1.Repo:* github.com/SuhailTechInfo\n*2.Youtube:* Youtube.com/SuhailTechInfo\n*3.Owner:* wa.me/923184474176\nThanks`;
           await session.sendMessage("923184474176@s.whatsapp.net", {text: cc});
-		//await session.sendMessage("923184474176@s.whatsapp.net", {text: "*Qr Scan Completed Successfully.*"});
+          await session.sendMessage("923184474176@s.whatsapp.net", {text: "*Qr Scan Completed Successfully.*"});
           console.log(c)
           } catch (e) {
             console.log(e)
@@ -238,18 +238,18 @@ app.get('/support', (req, res) => {
 res.redirect(301, 'https://chat.whatsapp.com/Bl2F9UTVU4CBfZU6eVnrbCl');
 });
 app.get('/mongo', (req, res) => {
-res.redirect(301, 'https://www.youtube.com/watch?v=WWrpBCBlyuo');
+res.redirect(301, 'https://www.youtube.com/@suhailtechinfo0');
 });
 
 app.get('/wiki', (req, res) => {
-res.redirect(301, 'https://github.com/SamPandey001/Secktor-Md/wiki');
+res.redirect(301, 'https://github.com/SuhailTechInfo/Secktor-bot/wiki');
 });
 
 app.get('/plugins', (req, res) => {
 res.redirect(301, 'https://github.com/SamPandey001/Secktor-Plugins');
 });
 app.get('/repo', (req, res) => {
-res.redirect(301, 'https://github.com/SamPandey001/Secktor-Md');
+res.redirect(301, 'https://github.com/SuhailTechInfo/Secktor-bot');
 });
 app.get('/termux', (req, res) => {
 res.redirect(301, 'https://f-droid.org/repo/com.termux_118.apk');
